@@ -1,0 +1,293 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <title>Timeline demo</title>
+    <meta http-equiv="Content-Type" cont	ent="text/html; charset=utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="timeline/timeline.js"></script>
+    <link rel="stylesheet" type="text/css" href="timeline/timeline.css">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<style type="text/css">
+#holder
+{
+	height:400px;
+	margin:0px;
+	padding:0px;
+	background-color:white;
+}
+.inside
+{
+	border-color:black;
+	border-style:solid;
+	border-width:0px;
+	height:100%;
+	background-color:white;
+}
+
+body
+{
+	background-color:#d8d8d8;
+}
+#info
+{
+
+}
+.borderless td, .borderless th, td {
+    border: none;
+}
+.table {
+	width:auto;
+    border-bottom:0px !important;
+}
+.table th, .table td {
+    border: 1px !important;
+}
+.fixed-table-container {
+    border:0px !important;
+}
+#mytimeline
+{
+	border:none;
+}
+.vis-item
+{
+
+}
+.vis-label .vis-inner {
+  height: 120px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!--in body navbar-->
+<nav class="navbar navbar-default navbar-fixed-top" style="border-color:rgb(117,158,205)">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>                      
+      </button>				
+      <a class="navbar-brand" href="input_frontpage.html" style="color:rgb(117,158,205); font-size:150%; font-weight:bold;">ShipSchedule</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+	<li><a href="#" style="color:rgb(117,158,205); font-size:150%;">Welcome Bill! <span  class="glyphicon glyphicon-user"></span></a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<div style="height:50px;"></div>
+
+<!--End NavBar  -- Start main body-->
+<div class="container">
+<h1>Pier 1 Schedule</h1>
+<div id = "holder" class="row">
+	<div id="info" class="col-sm-4 inside">
+		<div class="container">
+		<u><h2 id="nameShip">Select a ship</h2></u>
+			<table class="table table-condensed">
+				<!--length, name, eta, etd, dtp, speed, moves, cranes-->
+				<tr>	
+					<td class="col-md-6"><strong>ETA</strong></td>
+					<td class="col-md-6" id="etaData"></td>
+				</tr>
+				<tr>	
+					<td class="col-md-6"><strong>ETD</strong></td>
+					<td id="etdData" class="col-md-6"></td>
+				</tr>
+				<tr>	
+					<td class="col-md-6"><strong>ETB</strong></td>
+					<td id="etbData" class="col-md-6"></td>
+				</tr>
+				<tr>	
+					<td class="col-md-6"><strong>Length</strong></td>
+					<td id="lengthData" class="col-md-6"></td>
+				</tr>
+				<tr>	
+					<td class="col-md-6"><strong>istance to Port</strong></td>
+					<td id="dtpData" class="col-md-6"></td>
+				</tr>
+				<tr>	
+					<td class="col-md-6"><strong>Current Speed</strong></td>
+					<td id="speedData" class="col-md-6"></td>
+				</tr>
+				<tr>	
+					<td class="col-md-6"><strong>Needed Moves</strong></td>
+					<td id="moveData" class="col-md-6"></td>
+				</tr>
+								<tr>	
+					<td class="col-md-6"><strong>Needed Crane Number</strong></td>
+					<td id="craneData" class="col-md-6"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div id="mytimeline" class="col-sm-8 inside"></div>
+</div>
+<!-- Information about where the used icons come from -->
+<p style="color:gray; font-size:10px; font-style:italic;">
+    Icons by <a href="http://dryicons.com" target="_blank" title="Aesthetica 2 Icons by DryIcons" style="color:gray;" >DryIcons</a>
+    and <a href="http://www.tpdkdesign.net" target="_blank" title="Refresh Cl Icons by TpdkDesign.net" style="color:gray;" >TpdkDesign.net</a>
+</p>
+</div><!-- end of main container div-->
+
+<footer class="container-fluid text-center" style="width=100%; margin=0;">
+  <p>Prototype developed by Charles Walsh, Joseph Muchulsky, and Bill Ulrich.</p>
+  <p>Thank you to the sponsors and organizers of NYC Port and Logistics Hackathon!</p>
+</footer>
+
+<script type="text/javascript">
+	//Global vars
+	
+	var timeline;
+	
+	function pier(name, length)
+	{
+		this.name = name;
+		this.length = length;
+	};
+	
+	function boat(length, name, eta, etd, dtp, speed, moves, cranes, etb)
+	{
+		this.length = length; //ship length meters
+		this.name = name; 
+		this.eta = eta;	//estimated time to arrival
+		this.etd = etd; //estimated time to depart
+		this.dtp = dtp; //distance to port
+		this.speed = speed;
+		this.moves = moves;
+		this.cranes = cranes;
+		this.etb = etb;
+	}
+	
+	var pier1 = new pier("Main Berth", 745);
+	
+	//
+	var boats = [
+		new boat(300, 'MAERSK SALTORO', 'Jan 22 2017 04:00:00', 'Jan 22 2017 23:00:00', 1000, 14, 2195, 4, 'Jan 22 2017 18:00:00'),
+        new boat(337, 'MAERSK GENOA', 'Jan 22 2017 16:30:00', 'Jan 23 2017 10:00:00', 1000, 14, 1851, 4, 'Jan 22 2017 04:00:00'), 
+		new boat(208, 'DEVON TRADER', 'Jan 23 2017 01:00:00', 'Jan 23 2017 23:59:00', 1000, 12.5, 200, 4, 'Jan 23 2017 10:00:00'),
+		new boat(369, 'AL NASRIYAH', 'Jan 23 2017 11:00:00', 'Jan 24 2017 06:00:00', 640, 23.2,1900, 4, 'Jan 23 2017 13:00:00'),
+		new boat(255, 'CHARLOTTE SHULTE', 'Jan 24 2017 02:00:00', 'Jan 24 2017 16:30:00', 6000, 12.5, 1404, 4, 'Jan 24 2017 03:30:00'),
+		new boat(366, 'AL QIBLA', 'Jan 24 2017 01:00:00', 'Jan 24 2017 22:30:00', 9, 7000, 2100, 4, 'Jan 24 2017 22:30:00'),
+        new boat(332, 'MAERSK TAIKUNG', 'Jan 24 2017 23:59:00', 'Jan 25 2017 16:00:00', 400, 12, 1600, 4, 'Jan 25 2017 16:00:00'),
+        new boat(277, 'SUDAIR', 'Jan 25 2017 00:00:00', 'Jan 25 2017 20:00:00', 7000, 10.8, 1600, 3, 'Jan 25 2017 03:00:00')
+	];
+	
+	var rowData = [];
+	var i;
+	for(i = 0; i <boats.length; i++)
+	{
+		//start, end, content, group, className
+		rowData[i] = [new Date(boats[i].eta), new Date(boats[i].etd), ""+boats[i].moves+" Moves", "Pier 1", i+""];
+	}
+	
+	google.load("visualization", "1");
+	google.setOnLoadCallback(drawTimeline);
+	
+	
+	function drawTimeline() {
+		// load data and create the timeline here
+		var data = new google.visualization.DataTable();
+		data.addColumn('datetime', 'start');
+		data.addColumn('datetime', 'end');
+		data.addColumn('string', 'content');
+		data.addColumn('string', 'group');
+		data.addColumn('string', 'className');
+	
+		data.addRows(rowData);
+		/*
+					[[new Date(2010,7,28), new Date(2010,8,5), "Never Lucky", "Pier 1"],
+			[new Date(2010,7,20), new Date(2010,8,2), "Ever Lucky", "Pier 1"],
+			[new Date(2010,7,28), new Date(2010,8,30), "Never Lucky", "Pier 2"],
+			[new Date(2010,7,15), new Date(2010,8,2), "Ever Lucky", "Pier 2"],
+			]
+
+		*/
+	
+		var options = {
+          "width":  "100%",
+          "height": "100%",
+          "style": "box", // optional
+		  "editable": "true"
+        };
+			        // Instantiate our timeline object.
+        timeline = new links.Timeline(document.getElementById('mytimeline'));
+		//data.setOptions();
+        // Draw our timeline with the created data and options
+        timeline.draw(data, options);
+		google.visualization.events.addListener(timeline, 'select', onselect);
+		google.visualization.events.addListener(timeline, 'change', onchange);
+		
+	
+	};
+	
+	function onselect() {
+	  var sel = timeline.getSelection();
+		if (sel[0].row != undefined) {
+			var row = sel[0].row;
+			populateInfo(row);
+		}
+	};
+	
+	function onchange() {
+	  var sel = timeline.getSelection();
+		if (sel[0].row != undefined) {
+			var row = sel[0].row;
+			populateInfo(row);
+		}
+	};
+	
+	function populateInfo(index)
+	{
+		var boat = boats[index];
+		if(boat!=undefined){
+			document.getElementById("nameShip").innerText = boat.name;
+			document.getElementById("etdData").innerText = boat.etd;
+			document.getElementById("etaData").innerText = boat.eta;
+			document.getElementById("lengthData").innerText = boat.length;
+			document.getElementById("etbData").innerText = boat.etb;
+			document.getElementById("craneData").innerText = boat.cranes;
+			document.getElementById("moveData").innerText = boat.moves;
+			document.getElementById("dtpData").innerText = boat.dtp;
+			document.getElementById("speedData").innerText = boat.speed;
+		}
+	};
+	
+
+	$(function () {
+		$(".timeline-event-content").hover(function () {
+			var a = event.relatedTarget.classList;
+			if(a!=undefined && a.length!=0)
+			{
+					var i = parseInt(a[a.length-1]);
+					populateInfo(i);
+			}				
+		});
+	});
+	
+	function setHeight()
+	{
+		var b1;
+		var b2;
+		for(b1=0)
+	};
+	
+	
+
+</script>
+</body>
+</html>

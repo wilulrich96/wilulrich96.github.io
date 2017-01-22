@@ -1,0 +1,142 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <title>Timeline demo</title>
+    <meta http-equiv="Content-Type" cont	ent="text/html; charset=utf-8">
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="timeline/timeline.js"></script>
+    <link rel="stylesheet" type="text/css" href="timeline/timeline.css">
+
+<style type="text/css">
+body
+{
+	text-align:center;
+}
+.sharedDiv
+{
+	margin:0;
+	border:0;
+	padding:0;
+}
+#holder
+{	
+		border-color:black;
+	border-width:1px;
+	border-style:solid;
+	width:100%;
+	height:300px;
+}
+#info
+{
+	width:20%;
+	float:left;
+	height:100%;
+}
+#mytimeline
+{
+	width:80%;
+	float:right;
+	height:100%;
+}
+</style>
+</head>
+
+<body>
+<h1>Pier 1 Schedule</h1>
+<div id = "holder" class="sharedDiv">
+<div id= "info" class="sharedDiv">
+	<h2 id="nameShip"></h2>
+</div>
+<div id="mytimeline" class="sharedDiv"></div>
+</div>
+<!-- Information about where the used icons come from -->
+<p style="color:gray; font-size:10px; font-style:italic;">
+    Icons by <a href="http://dryicons.com" target="_blank" title="Aesthetica 2 Icons by DryIcons" style="color:gray;" >DryIcons</a>
+    and <a href="http://www.tpdkdesign.net" target="_blank" title="Refresh Cl Icons by TpdkDesign.net" style="color:gray;" >TpdkDesign.net</a>
+</p>
+
+
+<script type="text/javascript">
+	//Global vars
+	var pierLength = 745;
+	var timeline;
+	
+	function boat(length, name, eta, etd, dtp, speed, moves, cranes)
+	{
+		this.length = length; //ship length meters
+		this.name = name; 
+		this.eta = eta;	//estimated time to arrival
+		this.etd = etd; //estimated time to depart
+		this.dtp = dtp; //distance to port
+		this.speed = speed;
+		this.moves = moves;
+		this.cranes = cranes;
+	}
+	var boats = [
+		//		length, name, eta, etd, dtp, speed, moves, cranes
+		new boat(200, "Never Lucky", "May 01 2012 00:00:00", " May 02 2012 00:00:00", 1000, 15, 200, 4),
+		new boat(200, "Ever Lucky", "May 03 2012 06:00:00", " May 04 2012 00:00:00", 1000, 15, 200, 4),
+	];
+	var rowData = [];
+	var i;
+	for(i = 0; i<boats.length; i++)
+	{
+		rowData[i] = [new Date(boats[i].eta), new Date(boats[i].etd), boats[i].name, "Pier 1"];
+	}
+	
+	google.load("visualization", "1");
+	google.setOnLoadCallback(drawTimeline);
+	
+	
+	function drawTimeline() {
+		// load data and create the timeline here
+		var data = new google.visualization.DataTable();
+		data.addColumn('datetime', 'start');
+		data.addColumn('datetime', 'end');
+		data.addColumn('string', 'content');
+		data.addColumn('string', 'group');
+		//data.addColumn('string', 'className');
+	
+		data.addRows(rowData);
+		/*
+					[[new Date(2010,7,28), new Date(2010,8,5), "Never Lucky", "Pier 1"],
+			[new Date(2010,7,20), new Date(2010,8,2), "Ever Lucky", "Pier 1"],
+			[new Date(2010,7,28), new Date(2010,8,30), "Never Lucky", "Pier 2"],
+			[new Date(2010,7,15), new Date(2010,8,2), "Ever Lucky", "Pier 2"],
+			]
+
+		*/
+	
+		var options = {
+          "width":  "100%",
+          "height": "100%",
+          "style": "box", // optional
+		  "editable": "true"
+        };
+			        // Instantiate our timeline object.
+        timeline = new links.Timeline(document.getElementById('mytimeline'));
+		//data.setOptions();
+        // Draw our timeline with the created data and options
+        timeline.draw(data, options);
+		google.visualization.events.addListener(timeline, 'select', onselect);
+		
+	
+	};
+	
+	function onselect() {
+	  var sel = timeline.getSelection();
+	  if (sel.length) {
+		if (sel[0].row != undefined) {
+		  var row = sel[0].row;
+		  document.getElementById("nameShip").innerText = boats[row].name;
+		}
+	  }
+	}
+
+	
+	
+
+</script>
+</body>
+</html>

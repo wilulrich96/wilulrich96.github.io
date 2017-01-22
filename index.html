@@ -80,7 +80,7 @@ body
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         <span class="icon-bar"></span>                      
       </button>				
-      <a class="navbar-brand" href="input_frontpage.html" style="color:rgb(117,158,205); font-size:150%; font-weight:bold;">Fast Sea Scheduling</a>
+      <a class="navbar-brand" href="input_frontpage.html" style="color: black; font-size:200%; font-weight:bold;"><span style="color:rgb(117,158,205);">Fast</span>Sea Scheduling</a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-right">
@@ -93,7 +93,7 @@ body
 
 <!--End NavBar  -- Start main body-->
 <div class="container">
-<h1>Pier 1 Schedule</h1>
+<h1>Red Sea Gateway's Schedule</h1>
 <div id = "holder" class="row">
 	<div id="info" class="col-sm-4 inside">
 		<div class="container">
@@ -192,8 +192,9 @@ body
 	for(i = 0; i <boats.length; i++)
 	{
 		//start, end, content, group, className
-		rowData[i] = [new Date(boats[i].eta), new Date(boats[i].etd), ""+boats[i].moves+" Moves", "Pier 1", i+""];
+		rowData[i] = [new Date(boats[i].eta), new Date(boats[i].etd), ""+boats[i].moves+" Moves", "<strong>Pier 1</strong>", i+""];
 	}
+	rowData[i-1][3] = "<strong>Pier 2</strong>";
 	
 	google.load("visualization", "1");
 	google.setOnLoadCallback(drawTimeline);
